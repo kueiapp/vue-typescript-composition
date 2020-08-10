@@ -6,10 +6,10 @@
 			v-focus
 			type="text"
 			placeholder="add something"
-			v-model="state.newTodo"
+			v-model="newTodo"
 			@keyup.enter="addTodo"
 		/>
-		<div v-for="todo in state.todoList" :key="todo.id" class="todo-row">
+		<div v-for="todo in todoList" :key="todo.id" class="todo-row">
 			<input type="checkbox" v-model="todo.completed" />
 			<div v-if="!todo.editing" @dblclick="editTodo(todo)">
 				{{ todo.title }}
@@ -47,12 +47,11 @@
 		props: {
 			msg: String,
 		},
-		setup(props) {
-			onMounted(() => {
-				console.warn(`component mounted..`);
-			});
-
-			const state = reactive({
+		mounted() {
+			console.warn(`component mounted..`);
+		},
+		data() {
+			return {
 				todoList: [
 					{
 						id: 1,
@@ -68,51 +67,46 @@
 					},
 				],
 				newTodo: undefined as undefined | string,
-			});
-
-			const getLatestTodoId: ComputedRef<number> = computed((): number => {
-				const lastTodo: Todo = state.todoList[state.todoList.length - 1];
+			};
+		},
+		computed: {
+			getLatestTodoId(): number {
+				const lastTodo: Todo = this.todoList[this.todoList.length - 1];
 				return lastTodo.id;
-			});
+			},
+		},
 
-			function addTodo() {
-				if (state.newTodo === undefined) return;
-				state.todoList.push({
-					id: getLatestTodoId.value + 1,
-					title: state.newTodo,
+		methods: {
+			addTodo() {
+				if (this.newTodo === undefined) return;
+				this.todoList.push({
+					id: this.getLatestTodoId + 1,
+					title: this.newTodo,
 					completed: false,
 					editing: false,
 				});
-			}
+			},
 
-			function editTodo(todo: Todo) {
+			editTodo(todo: Todo) {
 				todo.editing = !todo.editing;
-			}
+			},
 
-			function cancelEdit(todo: Todo) {
-				const editingTodo: Todo | undefined = state.todoList.find(
+			cancelEdit(todo: Todo) {
+				const editingTodo: Todo | undefined = this.todoList.find(
 					(todo: Todo) => todo.editing === true
 				);
 				if (editingTodo === undefined) return;
 				editingTodo.editing = false;
-			}
+			},
 
-			function doneEdit(todo: Todo) {
-				const editingTodo: Todo | undefined = state.todoList.find(
+			doneEdit(todo: Todo) {
+				const editingTodo: Todo | undefined = this.todoList.find(
 					(todo: Todo) => todo.editing === true
 				);
 				if (editingTodo === undefined) return;
 				editingTodo.title = todo.title;
 				editingTodo.editing = false;
-			}
-
-			return {
-				state,
-				addTodo,
-				editTodo,
-				doneEdit,
-				cancelEdit,
-			};
+			},
 		},
 		directives: {
 			focus: {

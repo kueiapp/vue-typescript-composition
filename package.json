@@ -1,5 +1,5 @@
 {
-	"name": "vue-todo-project",
+	"name": "vue-composition-project",
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
@@ -7,6 +7,11 @@
 		"build": "vue-cli-service build",
 		"lint": "vue-cli-service lint"
 	},
+	"keywords": [
+		"vue3",
+		"typescript",
+		"composition-api"
+	],
 	"dependencies": {
 		"@vue/composition-api": "^1.0.0-beta.8",
 		"core-js": "^3.6.5",
