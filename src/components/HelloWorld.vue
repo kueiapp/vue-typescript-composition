@@ -18,9 +18,10 @@
 				v-else
 				type="text"
 				v-model="todo.title"
-				@blue="doneEdit(todo)"
+				@blur="doneEdit(todo)"
 				@keyup.enter="doneEdit(todo)"
 				@keyup.esc="cancelEdit(todo)"
+				v-focus
 			/>
 		</div>
 	</div>
@@ -30,7 +31,6 @@
 	import Vue from "vue";
 	import {
 		reactive,
-		ref,
 		computed,
 		onMounted,
 		ComputedRef,
@@ -47,7 +47,7 @@
 		props: {
 			msg: String,
 		},
-		setup(props) {
+		setup() {
 			onMounted(() => {
 				console.warn(`component mounted..`);
 			});
@@ -90,11 +90,7 @@
 			}
 
 			function cancelEdit(todo: Todo) {
-				const editingTodo: Todo | undefined = state.todoList.find(
-					(todo: Todo) => todo.editing === true
-				);
-				if (editingTodo === undefined) return;
-				editingTodo.editing = false;
+				todo.editing = false;
 			}
 
 			function doneEdit(todo: Todo) {
