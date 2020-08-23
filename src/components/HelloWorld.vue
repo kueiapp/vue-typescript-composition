@@ -32,21 +32,8 @@
 
 <script lang="ts">
 	import Vue from "vue";
-	import {
-		reactive,
-		computed,
-		onMounted,
-		ComputedRef,
-		ref,
-	} from "@vue/composition-api";
 
-	type Todo = {
-		id: number;
-		completed: boolean;
-		editing: boolean;
-		title: string;
-	};
-
+	import { totoListLogic } from "@/compositions/todoListLogic";
 	import { toggleLogic } from "@/compositions/toggleLogic";
 
 	export default Vue.extend({
@@ -55,67 +42,17 @@
 			msg: String,
 		},
 		setup() {
-			onMounted(() => {
-				console.warn(`component mounted..`);
-			});
-
-			const state = reactive({
-				todoList: [
-					{
-						id: 1,
-						title: "hello",
-						completed: false,
-						editing: false,
-					},
-					{
-						id: 2,
-						title: "world",
-						completed: false,
-						editing: false,
-					},
-				],
-				newTodo: undefined as undefined | string,
-			});
-
-			const getLatestTodoId: ComputedRef<number> = computed((): number => {
-				const lastTodo: Todo = state.todoList[state.todoList.length - 1];
-				return lastTodo.id;
-			});
-
-			function addTodo() {
-				if (state.newTodo === undefined) return;
-				state.todoList.push({
-					id: getLatestTodoId.value + 1,
-					title: state.newTodo,
-					completed: false,
-					editing: false,
-				});
-			}
-
-			function editTodo(todo: Todo) {
-				todo.editing = !todo.editing;
-			}
-
-			function cancelEdit(todo: Todo) {
-				todo.editing = false;
-			}
-
-			function doneEdit(todo: Todo) {
-				const editingTodo: Todo | undefined = state.todoList.find(
-					(todo: Todo) => todo.editing === true
-				);
-				if (editingTodo === undefined) return;
-				editingTodo.title = todo.title;
-				editingTodo.editing = false;
-			}
+			// todo business logic
+			const {
+				state,
+				getLatestTodoId,
+				addTodo,
+				editTodo,
+				cancelEdit,
+				doneEdit,
+			} = totoListLogic();
 
 			// toggle business logic
-			// const show = ref(true);
-			// const toggle = () => {
-			// 	show.value = !show.value;
-			// };
-
-			// move above to composition functions
 			const { show, toggle } = toggleLogic();
 
 			return {
