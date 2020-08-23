@@ -1,6 +1,9 @@
 <template>
 	<div class="hello">
-		<h1>{{ msg }}</h1>
+		<section style="margin-bottom:32px;">
+			<h1 v-if="show">{{ msg }}</h1>
+			<button @click="toggle">Toggle above to hide</button>
+		</section>
 		<input
 			class="add-todo"
 			v-focus
@@ -34,6 +37,7 @@
 		computed,
 		onMounted,
 		ComputedRef,
+		ref,
 	} from "@vue/composition-api";
 
 	type Todo = {
@@ -42,6 +46,9 @@
 		editing: boolean;
 		title: string;
 	};
+
+	import { toggleLogic } from "@/compositions/toggleLogic";
+
 	export default Vue.extend({
 		name: "HelloWorld",
 		props: {
@@ -102,12 +109,23 @@
 				editingTodo.editing = false;
 			}
 
+			// toggle business logic
+			// const show = ref(true);
+			// const toggle = () => {
+			// 	show.value = !show.value;
+			// };
+
+			// move above to composition functions
+			const { show, toggle } = toggleLogic();
+
 			return {
 				state,
 				addTodo,
 				editTodo,
 				doneEdit,
 				cancelEdit,
+				show,
+				toggle,
 			};
 		},
 		directives: {
