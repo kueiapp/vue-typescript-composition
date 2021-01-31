@@ -1,4 +1,5 @@
 <template>
+  <!-- /** this file is an original one from vue-cli sample */ -->
   <div class="hello">
     <h1>{{ msg }}</h1>
     <p>
